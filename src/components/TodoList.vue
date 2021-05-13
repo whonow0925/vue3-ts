@@ -41,14 +41,20 @@ import { defineComponent, Ref, ref } from "vue";
 
 export default defineComponent({
   name: "TodoList",
+  //组合API的入口函数
   setup() {
+    // 定义了一个名叫item变量，这个变量的初始值是“”
+    // （ref 的作用）这个变量发生变化后，Vue会自动更新UI
+    // 使用 reactive 监听数字和对象
     const item = ref("");
     const itemList: Ref = ref([]);
-    const commit = () => {
+    const commit = (e:any) => {
+      //取消事件的默认动作
+      e.preventDefault();
       if (item.value !== "") {
         // vue3 setup()中没有this
         // itemList.value.unshift(item.value.trim());
-        itemList.value.push({
+        itemList.value.unshift({
           id: itemList.value.length + 1,
           text: item.value,
           status: false,
@@ -57,9 +63,12 @@ export default defineComponent({
         item.value = "";
       }
     };
-    const del = (index: number) => {
+    // const del = (index: number) => {
+    //   itemList.value.splice(index, 1);
+    // };
+    function del(index: number){
       itemList.value.splice(index, 1);
-    };
+    }
     const finish = (index: number) => {
       itemList.value[index].status = true;
     };
@@ -70,6 +79,8 @@ export default defineComponent({
       del,
       finish,
     };
+    //注意点：
+    // （1） 组合API 定义的变量、方法，想要在外界使用，必须通过return 暴露出去
   },
 });
 </script>
@@ -117,4 +128,3 @@ export default defineComponent({
   margin: auto 0;
 }
 </style>
-
